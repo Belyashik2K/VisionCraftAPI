@@ -1,4 +1,4 @@
-![photo_2024-03-28_10-22-45](https://github.com/Belyashik2K/TruckersMP/assets/126521808/b19a4f29-a2bf-4692-8de3-221dd166e42a)
+![photo (4)](https://github.com/Belyashik2K/VisionCraftAPI/assets/126521808/fa32e4fa-37bd-47a7-9574-bbc02191796b)
 # VisionCraft API
 > Fully async python wrapper for [VisionCraft API](https://api.visioncraft.top/docs)
 
