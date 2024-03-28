@@ -10,6 +10,7 @@
 * Fully async methods
 * Important methods return Pydantic model as result for easier interaction with data
 * Full exception handling
+* Full [documentation](https://vision.b2k.tech/) is available
 
 ## Usage
 ```python
