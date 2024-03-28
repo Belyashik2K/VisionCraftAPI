@@ -1,6 +1,6 @@
 from setuptools import setup
 
-version = '1.0.0'
+version = '1.0.1'
 
 with open('README.md', 'r') as f:
       long_description = f.read()
@@ -21,7 +21,7 @@ setup(name='VisionCraftAPI',
       
       packages=['VisionCraftAPI', 
                 'VisionCraftAPI/exceptions', 'VisionCraftAPI/models',
-                'VisionCraftAPI/utils', 'VisionCraftAPI/models'],
+                'VisionCraftAPI/utils', 'VisionCraftAPI/enums'],
       
       install_requires=['certifi', 'aiohttp', 'pydantic'],
       zip_safe=False)
