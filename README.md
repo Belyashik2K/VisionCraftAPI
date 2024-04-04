@@ -43,7 +43,7 @@ async def generate_xl_image(client: VisionCraftClient,
                     
 async def main():
     # Set your API key
-    api_key = "54bdfe91-eb76-47c0-a156-6fc9dd2f7db2"
+    api_key = "YOUR_API_KEY"
     # Create a VisionCraftClient instance
     client = VisionCraftClient(api_key=api_key)
     
