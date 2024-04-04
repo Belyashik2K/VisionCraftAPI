@@ -23,7 +23,7 @@ async def generate_xl_image(client: VisionCraftClient,
                             prompt: str,
                             model: str,
                             sampler: str,
-                            image_count: int) -> bytes:
+                            image_count: int):
     images = await client.generate_xl_image(
         prompt=prompt,
         model=model,
