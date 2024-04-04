@@ -15,26 +15,35 @@
 ## Usage
 ```python
 import asyncio
+import aiohttp
 
 from VisionCraftAPI import VisionCraftClient
 
 async def generate_xl_image(client: VisionCraftClient,
                             prompt: str,
                             model: str,
-                            sampler: str) -> bytes:
+                            sampler: str,
+                            image_count: int) -> bytes:
     images = await client.generate_xl_image(
         prompt=prompt,
         model=model,
-        sampler=sampler
+        sampler=sampler,
+        image_count=image_count
     )
     
-    print('Image generated! Saving to image.png...')
-    with open('image.png', 'wb') as file:
-        file.write(images)   
-
+    print('Images generated! Saving it...')
+    # Download and save the generated images
+    async with aiohttp.ClientSession() as session:
+        for i, image_url in enumerate(images):
+            async with session.get(image_url) as image_response:
+                image_data = await image_response.read()
+                # Save the image locally
+                with open(f"generated_image_{i}.png", "wb") as f:
+                    f.write(image_data)
+                    
 async def main():
     # Set your API key
-    api_key = "YOUR_API_KEY"
+    api_key = "54bdfe91-eb76-47c0-a156-6fc9dd2f7db2"
     # Create a VisionCraftClient instance
     client = VisionCraftClient(api_key=api_key)
     
@@ -46,7 +55,8 @@ async def main():
     await generate_xl_image(client=client,
                             prompt='A beautiful sunset',
                             model=models[0],
-                            sampler=samplers[0])
+                            sampler=samplers[0],
+                            image_count=4)
             
 if __name__ == '__main__':
     asyncio.run(main())

@@ -218,7 +218,8 @@ class VisionCraftClient(HTTPClient):
                                 height: Optional[int] = 1024,
                                 negative_prompt: Optional[str] = str(),
                                 cfg_scale: Optional[int] = 10,
-                                steps: Optional[int] = 30) -> bytes:
+                                steps: Optional[int] = 30,
+                                image_count: Optional[int] = 1) -> list[str]:
         """
         Generate an image using StableDiffusion XL models.
         
@@ -233,8 +234,9 @@ class VisionCraftClient(HTTPClient):
         :param negative_prompt: A negative text prompt for image generation
         :param cfg_scale: A scale for the configuration (min: 1, max: 20, default: 10)
         :param steps: Number of steps for image generation (min: 1, max: 50, default: 30)
+        :param image_count: Number of images to generate (max: 5, default: 1)
         
-        :return: A bytes object of the generated image
+        :return: A list of image URLs
         """
         
         json = {
@@ -246,10 +248,12 @@ class VisionCraftClient(HTTPClient):
             "width": width,
             "sampler": sampler,
             "cfg_scale": cfg_scale,
-            "steps": steps
+            "steps": steps,
+            "image_count": image_count
         }
         
-        return await self.__post(f'{self.API_HOST}/generate-xl', json=json)
+        result = await self.__post(f'{self.API_HOST}/generate-xl', json=json)
+        return result['images']
         
     async def create_midjourney_task(self,
                                      prompt: str) -> MidjourneyTask:
