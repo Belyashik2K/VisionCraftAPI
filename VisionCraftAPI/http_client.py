@@ -44,9 +44,9 @@ class HTTPClient:
         """Check if the response contains an exception."""
         if isinstance(data, dict):
             if data.get('error') or data.get('detail'):
-                exception = data.get('error') or data.get('detail')
+                exception = data.get('error').get('message') or data.get('detail')
                 checker.check(exception=exception,
-                              status_code=status_code)
+                              status_code=data.get('code') or status_code)
         if status_code != 200:
             checker.check(exception=data,
                           status_code=status_code)

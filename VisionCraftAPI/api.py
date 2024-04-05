@@ -186,7 +186,7 @@ class VisionCraftClient(HTTPClient):
         :param image_count: Number of images to generate (max: 5, default: 1)
         :param negative_prompt: A negative text prompt for image generation
         :param cfg_scale: A scale for the configuration (min: 1, max: 20, default: 10)
-        :param steps: Number of steps for image generation (min: 1, max: 50, default: 30)
+        :param steps: Number of steps for image generation (min: 1, max: 30, default: 30)
         :param loras: A dictionary of LORAs for the model
         :param upscale: Whether to upscale the image or not
         
@@ -233,7 +233,7 @@ class VisionCraftClient(HTTPClient):
         :param height: Height of the generated image (min: 512, max: 1024, default: 1024)
         :param negative_prompt: A negative text prompt for image generation
         :param cfg_scale: A scale for the configuration (min: 1, max: 20, default: 10)
-        :param steps: Number of steps for image generation (min: 1, max: 50, default: 30)
+        :param steps: Number of steps for image generation (min: 1, max: 30, default: 30)
         :param image_count: Number of images to generate (max: 5, default: 1)
         
         :return: A list of image URLs
@@ -454,8 +454,7 @@ class VisionCraftClient(HTTPClient):
     async def llm_chatting(self,
                            model: str,
                            messages: list[dict],
-                           image: Optional[str | bytes] = str(),
-                           max_new_tokens: Optional[int] = 512,
+                           max_tokens: Optional[int] = 4096,
                            temperature: Optional[float] = 0.7,
                            top_p: Optional[float] = 0.9,
                            top_k: Optional[int] = 0,
@@ -470,8 +469,7 @@ class VisionCraftClient(HTTPClient):
         
         :param model: An LLM model from the list of available models
         :param messages: A list of messages for chatting
-        :param image: A URL of the image (Only supported for llava-1.5-7b-hf model)
-        :param max_new_tokens: Maximum length of the newly generated generated text (min: 128, max: 100000, default: 512)
+        :param max_tokens: Maximum length of the newly generated generated text (min: 128, max: 100000, default: 512)
         :param temperature: Temperature for sampling (min: 0, max: 100, default: 0.7)
         :param top_p: Top-p for nucleus sampling (min: 0, max: 1, default: 0.9)
         :param top_k: Top-k for nucleus sampling (min: 0, max: 99999, default: 0)
@@ -481,17 +479,16 @@ class VisionCraftClient(HTTPClient):
         
         :return: A LLMAnswer object
         """
-    
-        if model != "llava-1.5-7b-hf" and image:
-            raise ValueError("Image is only supported for llava-1.5-7b-hf model.")
-    
-        if type(image) == bytes:
-            image = base64.b64encode(image).decode('utf-8')
+                    
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}"
+        }  
     
         data = {
             "model": model,
             "messages": messages,
-            "max_new_tokens": max_new_tokens,
+            "max_tokens": max_tokens,
             "temperature": temperature,
             "top_p": top_p,
             "top_k": top_k,
@@ -501,9 +498,9 @@ class VisionCraftClient(HTTPClient):
             "token": self.api_key
         }
         
-        data['image'] = image
-        
-        result = await self.__post(f'{self.API_HOST}/llm', json=data)
+        result = await self.__post(f'{self.API_HOST}/v1/chat/completions',
+                                   headers=headers,
+                                   json=data)
         return LLMAnswer(**result['choices'][0]['message'])
     
     async def whisper(self,
