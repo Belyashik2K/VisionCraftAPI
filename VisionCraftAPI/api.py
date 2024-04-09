@@ -297,61 +297,6 @@ class VisionCraftClient(HTTPClient):
         result = await self.__post(f'{self.API_HOST}/midjourney/result', json=json)
         return MidjourneyResult(**result)
     
-    async def generate_dalle_image(self,
-                                   prompt: str) -> bytes:
-        """
-        Generate an image using DALL-E 3 model.
-        
-        API Docs: https://docs.visioncraft.top/interacting-with-the-api/dalle-3/image-generation
-        SDK Docs: https://vision.b2k.tech/docs/api-methods/dall-e-3/generate_dalle_image
-        
-        :param prompt: A text prompt for image generation
-        
-        :return: A bytes object of the generated image
-        """
-        
-        json = {
-            "prompt": prompt,
-            "token": self.api_key
-        }
-        
-        return await self.__post(f'{self.API_HOST}/dalle', json=json)
-    
-    async def generate_openjourney_image(self,
-                                         prompt: str,
-                                         width: Optional[int] = 512,
-                                         height: Optional[int] = 512,
-                                         negative_prompt: Optional[str] = str(),
-                                         cfg_scale: Optional[int] = 7.5,
-                                         steps: Optional[int] = 50) -> bytes:
-        """
-        Generate an image using Openjourney model.
-        
-        API Docs: https://docs.visioncraft.top/interacting-with-the-api/openjourney/image-generation
-        SDK Docs: https://vision.b2k.tech/docs/api-methods/openjourney/generate_openjourney_image
-        
-        :param prompt: A text prompt for image generation
-        :param width: Width of the generated image (min: 128, max: 1024, default: 512)
-        :param height: Height of the generated image (min: 128, max: 1024, default: 512)
-        :param negative_prompt: A negative text prompt for image generation
-        :param cfg_scale: A scale for the configuration (min: 1, max: 20, default: 7.5)
-        :param steps: Number of steps for image generation (min: 1, max: 50, default: 50)
-        
-        :return: A bytes object of the generated image
-        """
-        
-        json = {
-            "prompt": prompt,
-            "negative_prompt": negative_prompt,
-            "token": self.api_key,
-            "height": height,
-            "width": width,
-            "cfg_scale": cfg_scale,
-            "steps": steps
-        }
-        
-        return await self.__post(f'{self.API_HOST}/openjourney', json=json)
-    
     async def image_upscaling(self,
                               image: str | bytes) -> bytes:     
         """
