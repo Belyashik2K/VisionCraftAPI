@@ -76,6 +76,17 @@ class VisionCraftClient(HTTPClient):
         """
         return await self.__get(f'{self.API_HOST}/models-llm')
     
+    async def get_upscale_models(self) -> list:
+        """
+        Get list of all upscale models.
+        
+        API Docs: https://docs.visioncraft.top/interacting-with-the-api/image-upscale/available-models
+        SDK Docs: https://vision.b2k.tech/docs/api-methods/image-upscale/get_upscale_models
+        
+        :return: A list of upscale models
+        """
+        return await self.__get(f'{self.API_HOST}/models-upscale')
+
     async def get_samplers(self) -> list:
         """
         Get list of all samplers for StableDiffusion 1.x models.
@@ -298,7 +309,9 @@ class VisionCraftClient(HTTPClient):
         return MidjourneyResult(**result)
     
     async def image_upscaling(self,
-                              image: str | bytes) -> bytes:     
+                              image: str | bytes,
+                              model: str,
+                              resize: Optional[int] = 2) -> bytes:     
         """
         Upscale an image.
         
@@ -306,6 +319,8 @@ class VisionCraftClient(HTTPClient):
         SDK Docs: https://vision.b2k.tech/docs/api-methods/image-upscale/image_upscaling
         
         :param image: A URL or bytes object of the image to upscale
+        :param model: An upscale model from the list of available models
+        :param resize: How many times to improve a photo (2 or 4)
         
         :return: A bytes object of the upscaled image
         """   
@@ -315,7 +330,9 @@ class VisionCraftClient(HTTPClient):
         
         json = {
             "image": image,
-            "token": self.api_key
+            "token": self.api_key,
+            "model": model,
+            "resize": resize
         }
         
         return await self.__post(f'{self.API_HOST}/upscale', json=json)
