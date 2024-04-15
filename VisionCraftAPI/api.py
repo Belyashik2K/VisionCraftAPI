@@ -230,7 +230,8 @@ class VisionCraftClient(HTTPClient):
                                 negative_prompt: Optional[str] = str(),
                                 cfg_scale: Optional[int] = 10,
                                 steps: Optional[int] = 30,
-                                image_count: Optional[int] = 1) -> list[str]:
+                                image_count: Optional[int] = 1,
+                                loras: Optional[dict] = {}) -> list[str]:
         """
         Generate an image using StableDiffusion XL models.
         
@@ -246,6 +247,7 @@ class VisionCraftClient(HTTPClient):
         :param cfg_scale: A scale for the configuration (min: 1, max: 20, default: 10)
         :param steps: Number of steps for image generation (min: 1, max: 30, default: 30)
         :param image_count: Number of images to generate (max: 5, default: 1)
+        :param loras: A dictionary of LORAs for the model
         
         :return: A list of image URLs
         """
@@ -260,7 +262,8 @@ class VisionCraftClient(HTTPClient):
             "sampler": sampler,
             "cfg_scale": cfg_scale,
             "steps": steps,
-            "image_count": image_count
+            "image_count": image_count,
+            "loras": loras
         }
         
         result = await self.__post(f'{self.API_HOST}/generate-xl', json=json)
