@@ -120,6 +120,17 @@ class VisionCraftClient(HTTPClient):
         """
         return await self.__get(f'{self.API_HOST}/loras')
     
+    async def get_xl_loras(self) -> list:
+        """
+        Get list of all LORAs for StableDiffusion XL models.
+        
+        API Docs: https://docs.visioncraft.top/interacting-with-the-api/stablediffusion-xl-models/available-loras
+        SDK Docs: https://vision.b2k.tech/docs/api-methods/stablediffusion-xl-models/get_xl_loras
+        
+        :return: A list of LORAs for StableDiffusion XL models
+        """
+        return await self.__get(f'{self.API_HOST}/loras-xl')
+
     async def get_limits(self) -> RateLimits:
         """
         Get info about rate limits for free users.
