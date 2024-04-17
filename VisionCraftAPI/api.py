@@ -196,7 +196,7 @@ class VisionCraftClient(HTTPClient):
                              negative_prompt: Optional[str] = str(),
                              cfg_scale: Optional[int] = 10,
                              steps: Optional[int] = 30,
-                             loras: Optional[dict] = {},
+                             loras: Optional[dict] = dict(),
                              upscale: Optional[bool] = False) -> list[str]:
         """
         Generate an image using StableDiffusion 1.x models.
@@ -246,7 +246,7 @@ class VisionCraftClient(HTTPClient):
                                 cfg_scale: Optional[int] = 10,
                                 steps: Optional[int] = 30,
                                 image_count: Optional[int] = 1,
-                                loras: Optional[dict] = {}) -> list[str]:
+                                loras: Optional[dict] = dict()) -> list[str]:
         """
         Generate an image using StableDiffusion XL models.
         
