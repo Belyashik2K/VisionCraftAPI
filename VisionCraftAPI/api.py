@@ -120,6 +120,17 @@ class VisionCraftClient(HTTPClient):
         """
         return await self.__get(f'{self.API_HOST}/loras')
     
+    async def get_xl_loras(self) -> list:
+        """
+        Get list of all LORAs for StableDiffusion XL models.
+        
+        API Docs: https://docs.visioncraft.top/interacting-with-the-api/stablediffusion-xl-models/available-loras
+        SDK Docs: https://vision.b2k.tech/docs/api-methods/stablediffusion-xl-models/get_xl_loras
+        
+        :return: A list of LORAs for StableDiffusion XL models
+        """
+        return await self.__get(f'{self.API_HOST}/loras-xl')
+    
     async def get_limits(self) -> Tiers:
         """
         Get info about rate limits for free users.
@@ -234,7 +245,8 @@ class VisionCraftClient(HTTPClient):
                                 negative_prompt: Optional[str] = str(),
                                 cfg_scale: Optional[int] = 10,
                                 steps: Optional[int] = 30,
-                                image_count: Optional[int] = 1) -> list[str]:
+                                image_count: Optional[int] = 1,
+                                loras: Optional[dict] = {}) -> list[str]:
         """
         Generate an image using StableDiffusion XL models.
         
@@ -250,6 +262,7 @@ class VisionCraftClient(HTTPClient):
         :param cfg_scale: A scale for the configuration (min: 1, max: 20, default: 10)
         :param steps: Number of steps for image generation (min: 1, max: 30, default: 30)
         :param image_count: Number of images to generate (max: 5, default: 1)
+        :param loras: A dictionary of LORAs for the model
         
         :return: A list of image URLs
         """
@@ -264,7 +277,8 @@ class VisionCraftClient(HTTPClient):
             "sampler": sampler,
             "cfg_scale": cfg_scale,
             "steps": steps,
-            "image_count": image_count
+            "image_count": image_count,
+            "loras": loras
         }
         
         result = await self.__post(f'{self.API_HOST}/generate-xl', json=json)
