@@ -1,4 +1,4 @@
-from .limits import RateLimits
+from .limits import RateLimits, Tiers
 from .midjourney import MidjourneyTask, MidjourneyResult
 from .llm import LLMAnswer
 from .whisper import WhisperResult, Segment, InferenceStatus
@@ -9,4 +9,5 @@ __all__ = [
     "MidjourneyResult",
     "LLMAnswer",
     "WhisperResult",
+    "Tiers"
 ]

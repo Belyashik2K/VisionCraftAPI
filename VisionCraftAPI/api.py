@@ -4,11 +4,11 @@ from json import loads
 from typing import Optional
 
 from .http_client import HTTPClient
-from .models import (RateLimits,
-                     MidjourneyTask,
+from .models import (MidjourneyTask,
                      MidjourneyResult,
                      LLMAnswer,
-                     WhisperResult)
+                     WhisperResult,
+                     Tiers)
 
 class VisionCraftClient(HTTPClient):
     """
@@ -120,34 +120,38 @@ class VisionCraftClient(HTTPClient):
         """
         return await self.__get(f'{self.API_HOST}/loras')
     
-    async def get_limits(self) -> RateLimits:
+    async def get_limits(self) -> Tiers:
         """
         Get info about rate limits for free users.
         
         API Docs: https://api.visioncraft.top/limits
         SDK Docs: https://vision.b2k.tech/docs/api-methods/api-limits/get_limits
         
-        :return: A RateLimits object
+        :return: A Tiers object
         """
         
         limits: dict = loads(await self.__get(f'{self.API_HOST}/limits'))
         
         new_keys = {
+            "Free Tier": "FREE",
+            "Tier 1 ($10 per month)": "TIER_1",
+            "Tier 2 ($25 per month)": "TIER_2",
             "SD 1.X": "STABLEDIFFUSION",
             "SDXL models": "STABLEDIFFUSIONXL",
             "DALLE-3": "DALLE3",
             "Image Upscalilng": "IMAGEUPSCALING"
         }
         
-        for key, _ in limits.copy().items():
-            if key in ["SD 1.X", "SDXL models", "DALLE-3", "Image Upscalilng"]:
-                limits[new_keys[key]] = limits[key]
-            else:
-                limits[key.upper()] = limits[key]
-                
-            if key != key.upper():
-                del limits[key]
-        return RateLimits(**limits)
+        new_data = dict()
+        
+        for tier, models in limits.items():
+            new_data[new_keys[tier]] = {}
+            for model, limit in models.items():
+                if model in new_keys:
+                    new_data[new_keys[tier]][new_keys[model]] = limit
+                else:
+                    new_data[new_keys[tier]][model.upper()] = limit           
+        return Tiers(**new_data)
     
     async def get_i2i_schedulers(self) -> list:
         """

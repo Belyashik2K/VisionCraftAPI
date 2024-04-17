@@ -5,10 +5,13 @@ class RateLimits(BaseModel):
     LLM: str
     STABLEDIFFUSION: str
     STABLEDIFFUSIONXL: str
-    DALLE3: str
-    OPENJOURNEY: str
     IMG2IMG: str
     TEXT2GIF: str
     WHISPER: str
     IMAGEUPSCALING: str
     MIDJOURNEY: str
+
+class Tiers(BaseModel):
+    FREE: RateLimits
+    TIER_1: RateLimits
+    TIER_2: RateLimits
